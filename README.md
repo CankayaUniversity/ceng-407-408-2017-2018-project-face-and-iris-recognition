@@ -1,11 +1,11 @@
 Installation Guide/User Manuel
-Install MATLAB +2012 with all components.
+<br>Install MATLAB +2012 with all components.</br>
 Create a folder named "FaceAndIris"
 Copy all files to FaceAndIris folder.
 Start GuiMain.m
 
 Firstly, Admin should add users;
--Clicl Admin Menu
+-Click Admin Menu
 -Login
 **Add User Button**
 If you want to add a user.
