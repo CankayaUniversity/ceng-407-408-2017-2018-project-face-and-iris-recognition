@@ -25,21 +25,21 @@ Installation Guide/User Manuel
 <br>->Basicly, it is the database that program use for recognition.
 <br>->Filename is the name of the folder that contains images.
 <br>->Number is number of images that will be read.
-**Set Configuration** 
+<br>**Set Configuration** 
 <br>Enter treshold and click set conf. button to set treshold.
-**Recognition Part**
-**Face Recognition(PCA)**
+<br>**Recognition Part**
+<br>**Face Recognition(PCA)**
 <br>Click Face Recognition(PCA) button.
 <br>Select Image.
-**Iris Recognition(Phase)**
+<br>**Iris Recognition(Phase)**
 <br>Click Iris Recognition(Phase) button.
 <br>Select Image.
-**Iris Recognition(DFT)**
+<br>**Iris Recognition(DFT)**
 <br>Click Iris Recognition(DFT) button.
 <br>Select Image.
-**Iris Recognition(PCA)**
+<br>**Iris Recognition(PCA)**
 <br>Click Iris Recognition(PCA) button.
 <br>Select Image.
-**Iris Recognition(Neural)**
+<br>**Iris Recognition(Neural)**
 <br>Click Iris Recognition(Neural) button.
 <br>Select Image.
