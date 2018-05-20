@@ -42,7 +42,9 @@ Installation Guide/User Manuel
 <br>Enter treshold and click set conf. button to set treshold.
 <br>
 <br>**Recognition Part**
+<br>
 <br> In GuiMain.m
+<br>
 <br>**Face Recognition(PCA)**
 <br>Click Face Recognition(PCA) button.
 <br>Select Image.
