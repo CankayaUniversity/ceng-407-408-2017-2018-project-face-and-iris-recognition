@@ -7,6 +7,9 @@ Installation Guide/User Manuel
 <br>Firstly, Admin should add users;
 <br>-Click Admin Menu
 <br>-Login
+<br>
+<br>In AfterLoginAdmin.m
+<br>
 <br>**Scan Database Button**
 <br>In the begining of the program, If you want to add all users.
 <br>Click Scan database button
@@ -17,6 +20,7 @@ Installation Guide/User Manuel
 <br>Basicly, it is the database that program use for recognition.
 <br>->Filename will be emnpty.
 <br>->Number is number of users.
+<br>
 <br>**Add User Button**
 <br>If you want to add a user.
 <br>->File Path = Path of the folder that contains a folder that contains training files.
@@ -25,9 +29,20 @@ Installation Guide/User Manuel
 <br>->Basicly, it is the database that program use for recognition.
 <br>->Filename is the name of the folder that contains images.
 <br>->Number is number of images that will be read.
+<br>
+<br>**Update Button**
+<br>If you want to update a user. 
+<br>->File Path = Path of the folder that contains a folder that contains training files. 
+<br>Then, Choose Phase path. 
+<br>->Phase Path = Path of the folder that contains files that are avarage phases of given files. 
+<br>->Basicly, it is the database that program use for recognition. 
+<br>->Filename is the name of the folder that contains images. 
+<br>->Number is number of images that will be read.
 <br>**Set Configuration** 
 <br>Enter treshold and click set conf. button to set treshold.
+<br>
 <br>**Recognition Part**
+<br> In GuiMain.m
 <br>**Face Recognition(PCA)**
 <br>Click Face Recognition(PCA) button.
 <br>Select Image.
