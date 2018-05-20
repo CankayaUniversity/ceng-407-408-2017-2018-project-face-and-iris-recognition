@@ -5,7 +5,7 @@ Installation Guide/User Manuel
 <br>Connect to server with Windows Authentication with your Server name.
 <br>Right click to the Databases folder which in the Object Explorer, then click Restore Database...
 <br>Select Device for the Source and click ...
-<br>Add downloaded .bak file to the MSSQL.
+<br>Add downloaded .bak file which name is IrisAdmin to the MSSQL.
 <br>Open the MATLAB and go to the APPS button which exist top left corner.
 <br>Click the Get More Apps, then write Database Toolbox to the search area and download it.
 <br>After download it, you can see Database Explorer in the Apps, so open it.
@@ -17,7 +17,7 @@ Installation Guide/User Manuel
 <br>Click end.
 <br>After click end you can Test Data Source to checking succeed or not, if it is successul, you will see TESTS COMPLETED SUCCESSFULLY! text at opening screen.
 <br> Close every screen except the Database Explorer and again Click Configure Data Source and then click Configure ODBC data source.
-<br>
+<br>At opening screen, select the MSSQL and click okey., so connection is done between MSSQL and MATLAB.
 <br>Create a folder named "FaceAndIris"
 <br>Copy all files to FaceAndIris folder.
 <br>Start GuiMain.m
