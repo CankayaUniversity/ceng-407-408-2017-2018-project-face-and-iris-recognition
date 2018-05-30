@@ -23,7 +23,7 @@ function varargout = GuiMain(varargin)
 
 % Edit the above text to modify the response to help GuiMain
 
-% Last Modified by GUIDE v2.5 01-May-2018 13:18:32
+% Last Modified by GUIDE v2.5 27-May-2018 13:18:21
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -80,94 +80,6 @@ function pushbutton1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[filename pathname] = uigetfile({'*.jpg';'*.bmp'},'File Selector');
-image = strcat(pathname, filename);
-axes(handles.axes1)
-im = imread(image);
-imshow(im);
-set(handles.edit1, 'string', filename);
-set(handles.edit2, 'string', pathname);
-
-
-e = edge(im, 'canny');
-radii = 40:1:65;  %50,60  :110, 110 
-h = circle_hough(e, radii, 'same', 'normalise');
-figure, imshow(im)
-peaks = circle_houghpeaks(h, radii, 'nhoodxy', 15, 'nhoodr', 21, 'npeaks', 1);
-
-hold on;
-for peak1 = peaks
-    [x, y] = circlepoints(peak1(3));
-    plot(x+peak1(1), y+peak1(2), 'g-');
-end
-
-radii = 85:1:115;  %50,60  :110, 110 
-h = circle_hough(e, radii, 'same', 'normalise');
-peaks = circle_houghpeaks(h, radii, 'nhoodxy', 15, 'nhoodr', 21, 'npeaks', 1);
-for peak2 = peaks
-    [x, y] = circlepoints(peak2(3));
-    plot(x+peak2(1), y+peak2(2), 'g-');
-end
-%%peak2(3)
-pc1 = peak1(1);
-pc2 = peak1(2);
-pr = peak1(3);
-
-c1 = peak2(1);
-c2 = peak2(2);
-r = peak2(3);
-
-pa = ones(2*r+1,2*r+1);
-
-pa1 = getnhood(strel('disk',pr,0));
-for j = 1:pr*2
-    for k = 1:pr*2
-        
-        if pa1(j,k) == 0
-            pa1(j,k) = 1;
-        else
-            pa1(j,k) = 0;
-        end
-    end
-end
-
-%%imshow(pa1);
-pa(r-pr:r+pr,r-pr:r+pr) = pa1;
-%%im2 = rgb2gray(im);
-a1 = im(c2-r:c2+r,c1-r:c1+r);
-a2 = getnhood(strel('disk',r,0));
-%%imshow(a1);
-%%a5 =
-a21 = uint8(a2);
-a3 = a21 .* a1;
-pa2 = uint8(pa);
-a5 = a3 .* pa2;
-a4 = a5(r:2*r,:);
-last = a4(1:86,1:171);
-phUser = angle(fftshift(fft(last)));
-load user.mat
-max=0;
-name = '';
-for i=1:userCount   
-   phasepath = strcat('C:\Users\eurus\Desktop\IrisRec\dbm\',int2str(i),'\phase.txt');
-   %phase = imread(phasepath);
-   
- try 
-   phase = dlmread(phasepath);
-   
-   Sum = phUser .* phase;
-   Sum = sum(Sum);
-   Sum = sum(Sum);
-   if max < Sum
-       max = Sum;
-       name = int2str(i)
-   end
-
-catch 
-    
-end
-   
-end
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -326,3 +238,267 @@ function edit6_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in btnIrisPhase.
+function btnIrisPhase_Callback(hObject, eventdata, handles)
+% hObject    handle to btnIrisPhase (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+clear;
+clc;
+%resim seçme
+[filename pathname] = uigetfile({'*.jpg';'*.bmp'},'File Selector');
+image = strcat(pathname, filename);
+
+im = imread(image);
+%im = histeq(im1);
+
+name = '';
+%Tanýnacak resmi iþleme
+e = edge(im, 'canny');
+radii = 40:1:65;  %kucuk circle ýn min max capý
+h = circle_hough(e, radii, 'same', 'normalise');
+figure, imshow(im)
+peak11 = circle_houghpeaks(h, radii, 'nhoodxy', 15, 'nhoodr', 21, 'npeaks', 1);
+hold on;
+for peak = peak11
+    [x, y] = circlepoints(peak(3));
+    plot(x+peak(1), y+peak(2), 'g-');
+end
+pNumber = 50;
+radii = 85:1:112; % buyuk circle ýn min ve max capý
+h = circle_hough(e, radii, 'same', 'normalise');
+peak22 = circle_houghpeaks(h, radii, 'nhoodxy', 15, 'nhoodr', 21, 'npeaks', pNumber);
+
+    X = [peak22(1,1),peak22(2,1);peak11(1),peak11(2)];
+    dist = pdist(X,'euclidean');
+    min = dist;
+    rPeak = [peak22(1,1);peak22(2,1);peak22(3,1)];
+for pk = 2:pNumber
+    X = [peak22(1,pk),peak22(2,pk);peak11(1),peak11(2)];
+    dist = pdist(X,'euclidean');
+    if(dist < min)
+        min = dist;
+        rPeak = [peak22(1,pk);peak22(2,pk);peak22(3,pk)];
+    end
+end
+for peak = rPeak
+    [x, y] = circlepoints(peak(3));
+    plot(x+peak(1), y+peak(2), 'g-');
+end
+
+
+pc1 = peak11(1);
+pc2 = peak11(2);
+pr = peak11(3);
+
+c1 = rPeak(1);
+c2 = rPeak(2);
+r = rPeak(3);
+
+pa = ones(2*r+1,2*r+1);
+
+pa1 = getnhood(strel('disk',pr,0));
+for j = 1:pr*2
+    for k = 1:pr*2
+        
+        if pa1(j,k) == 0
+            pa1(j,k) = 1;
+        else
+            pa1(j,k) = 0;
+        end
+    end
+end
+
+pa(r-pr:r+pr,r-pr:r+pr) = pa1;
+a1 = im(c2-r:c2+r,c1-r:c1+r);
+a2 = getnhood(strel('disk',r,0));
+a21 = uint8(a2);
+a3 = a21 .* a1;
+pa2 = uint8(pa);
+a5 = a3 .* pa2;
+a4 = a5(r:2*r,:);
+last = a4(1:86,1:171);
+phUser = angle(fftshift(fft2(double(last))));
+
+load phaseUser.mat
+max=0;
+
+load dbPhase.mat;
+
+for i=1:phaseCount  
+   phasepath = strcat(dbPhasePath,'\',int2str(i),'\sample.txt');
+   
+   phase = dlmread(phasepath);
+   
+ 
+   Sum = phUser .* phase;
+   Sum = sum(Sum);
+   Sum = sum(Sum);
+   if max < Sum
+       max = Sum;
+       name = int2str(i);
+   end
+   
+end
+
+name
+found = imread(strcat(dbPhasePath,'\',name,'\1.jpg'));
+figure, imshow(found);
+% --- Executes on button press in btnIrisPM.
+function btnIrisPM_Callback(hObject, eventdata, handles)
+% hObject    handle to btnIrisPM (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+clear;
+clc;
+%resim seçme
+[filename pathname] = uigetfile({'*.jpg';'*.bmp'},'File Selector');
+image = strcat(pathname, filename);
+
+im = imread(image);
+%im = histeq(im1);
+
+name = '';
+%Tanýnacak resmi iþleme
+e = edge(im, 'canny');
+radii = 40:1:65;  %kucuk circle ýn min max capý
+h = circle_hough(e, radii, 'same', 'normalise');
+figure, imshow(im)
+peak11 = circle_houghpeaks(h, radii, 'nhoodxy', 15, 'nhoodr', 21, 'npeaks', 1);
+hold on;
+for peak = peak11
+    [x, y] = circlepoints(peak(3));
+    plot(x+peak(1), y+peak(2), 'g-');
+end
+pNumber = 50;
+radii = 85:1:112; % buyuk circle ýn min ve max capý
+h = circle_hough(e, radii, 'same', 'normalise');
+peak22 = circle_houghpeaks(h, radii, 'nhoodxy', 15, 'nhoodr', 21, 'npeaks', pNumber);
+
+    X = [peak22(1,1),peak22(2,1);peak11(1),peak11(2)];
+    dist = pdist(X,'euclidean');
+    min = dist;
+    rPeak = [peak22(1,1);peak22(2,1);peak22(3,1)];
+for pk = 2:pNumber
+    X = [peak22(1,pk),peak22(2,pk);peak11(1),peak11(2)];
+    dist = pdist(X,'euclidean');
+    if(dist < min)
+        min = dist;
+        rPeak = [peak22(1,pk);peak22(2,pk);peak22(3,pk)];
+    end
+end
+for peak = rPeak
+    [x, y] = circlepoints(peak(3));
+    plot(x+peak(1), y+peak(2), 'g-');
+end
+
+
+pc1 = peak11(1);
+pc2 = peak11(2);
+pr = peak11(3);
+
+c1 = rPeak(1);
+c2 = rPeak(2);
+r = rPeak(3);
+
+pa = ones(2*r+1,2*r+1);
+
+pa1 = getnhood(strel('disk',pr,0));
+for j = 1:pr*2
+    for k = 1:pr*2
+        
+        if pa1(j,k) == 0
+            pa1(j,k) = 1;
+        else
+            pa1(j,k) = 0;
+        end
+    end
+end
+
+pa(r-pr:r+pr,r-pr:r+pr) = pa1;
+a1 = im(c2-r:c2+r,c1-r:c1+r);
+a2 = getnhood(strel('disk',r,0));
+a21 = uint8(a2);
+a3 = a21 .* a1;
+pa2 = uint8(pa);
+a5 = a3 .* pa2;
+a4 = a5(r:2*r,:);
+last = a4(1:86,1:171);
+phUser = fft2(double(last));
+
+load pmUser.mat;
+max=0;
+
+load dbPM.mat;
+
+for i=1:pmCount 
+   phasepath = strcat(dbPMPath,'\',int2str(i),'\sample.txt');
+   
+   phase = dlmread(phasepath);
+   
+ 
+   Sum = phUser .* phase;
+   Sum = sum(Sum);
+   Sum = sum(Sum);
+   if max < Sum
+       max = Sum;
+       name = int2str(i);
+   end
+   
+end
+
+name
+found = imread(strcat(dbPMPath,'\',name,'\1.jpg'));
+figure, imshow(found);
+
+% --- Executes on button press in btnFaceRec.
+function btnFaceRec_Callback(hObject, eventdata, handles)
+% hObject    handle to btnFaceRec (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+load dbFace.mat;
+datapath = dbFace;
+[filename pathname] = uigetfile({'*.jpg';'*.bmp'},'File Selector');
+givenImage = strcat(pathname, filename);
+
+resutImage = facerecog(datapath,givenImage);
+resultPath = strcat(datapath,'\',resutImage);
+showResultImage = imread(resultPath);
+imshow(showResultImage);
+title('Result Image');
+showGivenImage = imread(givenImage);
+figure,imshow(showGivenImage);
+title('Given Image');
+
+result = strcat('the result image is : ',resutImage);
+disp(result);
+
+
+% --- Executes on button press in btnIrisPCA.
+function btnIrisPCA_Callback(hObject, eventdata, handles)
+% hObject    handle to btnIrisPCA (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+load dbIrisPCA.mat;
+datapath = dbPCA;
+[filename pathname] = uigetfile({'*.jpg';'*.bmp'},'File Selector');
+givenImage = strcat(pathname, filename);
+
+resutImage = irisPCA(datapath,givenImage);
+resultPath = strcat(datapath,'\',resutImage);
+showResultImage = imread(resultPath);
+imshow(showResultImage);
+title('Result Image');
+showGivenImage = imread(givenImage);
+figure,imshow(showGivenImage);
+title('Given Image');
+
+result = strcat('the result image is : ',resutImage);
+disp(result);
